@@ -36,12 +36,14 @@ function poll() {
         url: SEISMOMETER_DATA_SERVER,
         type: "GET",
         success: function(data) {
-            console.log(data)
+            console.log(data);
             processData(data.z);
         },
         error: function() {
+            // console.log("hi");
             processData(a);
-        }
+            // console.log("bye");
+        },
         dataType: "json",
         xhrFields: {
             withCredentials: true
