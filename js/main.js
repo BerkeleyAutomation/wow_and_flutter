@@ -18,7 +18,7 @@ for (k = 1; k < NUM_PALETTES + 1; k++) {
 function make_img(fileName, context) {
     var img = new Image();
     img.src = fileName;
-    img.onload = function() {context.drawImage(img, 0, 0)};
+    img.onload = function () { context.drawImage(img, 0, 0) };
 }
 
 
@@ -31,31 +31,31 @@ var a = [726, 891, 664, 37, 152, 273, 456, 787, 881, 509, 257, 470, 517, 734, 56
 var b = a.slice(0, 30);
 
 //Get seismometer data from server; polls it every 250ms
-function poll() {
-    $.ajax({
-        url: SEISMOMETER_DATA_SERVER,
-        type: "GET",
-        success: function(data) {
-            console.log(data);
-            processData(data.z);
-        },
-        error: function() {
-            // console.log("hi");
-            processData(a);
-            // console.log("bye");
-        },
-        dataType: "json",
-        xhrFields: {
-            withCredentials: true
-        },
-        headers: {
-        },
-        crossDomain: true,
-        complete: setTimeout(function() {poll()}, 250),
-        timeout: 250
-    });
-}
-poll();
+// function poll() {
+//     $.ajax({
+//         url: SEISMOMETER_DATA_SERVER,
+//         type: "GET",
+//         success: function(data) {
+//             console.log(data);
+//             processData(data.z);
+//         },
+//         error: function() {
+//             // console.log("hi");
+//             processData(a);
+//             // console.log("bye");
+//         },
+//         dataType: "json",
+//         xhrFields: {
+//             withCredentials: true
+//         },
+//         headers: {
+//         },
+//         crossDomain: true,
+//         complete: setTimeout(function() {poll()}, 250),
+//         timeout: 250
+//     });
+// }
+// poll();
 
 
 var time = 1; //Our current location in the array of smoothed data points. Used for determining x-coordinate/time.
@@ -97,23 +97,23 @@ var circle_array = new Array();
 var count = 0;
 
 var _args = {};
-var yimmy = yimmy || (function(){
+var yimmy = yimmy || (function () {
     return {
-        init : function(Args) {
+        init: function (Args) {
             // Acquire args from HTML if necessary
             _args = Args;
         },
-        start : function(){
+        start: function () {
             // processData(a);
             processData(b);
             setInterval(update2, 300); //was 600; 300 currently
             main();
             // BEGIN LOOP
-            (function() {
-                var requestAnimationFrame = window.requestAnimationFrame || 
-                                            window.mozRequestAnimationFrame || 
-                                            window.webkitRequestAnimationFrame || 
-                                            window.msRequestAnimationFrame;
+            (function () {
+                var requestAnimationFrame = window.requestAnimationFrame ||
+                    window.mozRequestAnimationFrame ||
+                    window.webkitRequestAnimationFrame ||
+                    window.msRequestAnimationFrame;
                 window.requestAnimationFrame = requestAnimationFrame;
             })();
         }
@@ -148,12 +148,12 @@ var windowHeight = 1080;
 
 function createBloom(counter, iParam) {
 
-    
+
     windowHeight = canvas.height;
     windowWidth = canvas.width;
     var svgW = windowWidth;
     var svgH = windowHeight;
-    
+
 
     var numRings = NUM_RINGS_PER_BLOOM;
 
@@ -181,11 +181,11 @@ function createBloom(counter, iParam) {
 
     for (i = 0; i < numRings; i++) {
         randomX = mod((randomX - getRandomInt(0, Math.floor(w / 3))), w);
-        randomY = mod((randomY - getRandomInt(0, Math.floor(h / 3))), h); 
+        randomY = mod((randomY - getRandomInt(0, Math.floor(h / 3))), h);
         var pixelData = randomContext.getImageData(randomX, randomY, 1, 1).data;
         while (!isColorValid(pixelData[0], pixelData[1], pixelData[2])) {
             randomX = mod((randomX - getRandomInt(0, Math.floor(w / 3))), w);
-            randomY = mod((randomY - getRandomInt(0, Math.floor(h / 3))), h); 
+            randomY = mod((randomY - getRandomInt(0, Math.floor(h / 3))), h);
             pixelData = randomContext.getImageData(randomX, randomY, 1, 1).data;
         }
         colors.push(rgb2hsv(pixelData[0], pixelData[1], pixelData[2]));
@@ -209,16 +209,16 @@ function createBloom(counter, iParam) {
 
     var y = Math.abs(secondDerivative) * 3 % svgH; //maybe I should change this?
     var i = numRings;
-    
+
     /*
     need to fix the g_circle_t
     */
     var max_radius = init_r + Math.abs(smoothedData[iParam] / 10);
 
-    circle_array.push(new g_circle_t(counter, 1 - ((Math.floor((numRings - 1 - i) / 3)) + 1) / 3 * 0.5 , (numRings - 1 - i) * 12 + Math.floor((numRings - 1 - i) / 3) * 16, x, y, init_r, init_r + max_radius * (2 * i/3 + 1 + ((numRings - 1) / 3)) / numRings, rgbColors[i-1].r, rgbColors[i-1].g, rgbColors[i-1].b, max_radius * 2, 1));
+    circle_array.push(new g_circle_t(counter, 1 - ((Math.floor((numRings - 1 - i) / 3)) + 1) / 3 * 0.5, (numRings - 1 - i) * 12 + Math.floor((numRings - 1 - i) / 3) * 16, x, y, init_r, init_r + max_radius * (2 * i / 3 + 1 + ((numRings - 1) / 3)) / numRings, rgbColors[i - 1].r, rgbColors[i - 1].g, rgbColors[i - 1].b, max_radius * 2, 1));
 
 
-    var radius_of_largest_ring = (init_r + max_radius * (2 * (numRings -1)/3 + 1 + ((numRings - 1) / 3)) / numRings) * Math.log(21.5);
+    var radius_of_largest_ring = (init_r + max_radius * (2 * (numRings - 1) / 3 + 1 + ((numRings - 1) / 3)) / numRings) * Math.log(21.5);
     x = Math.min(svgW - radius_of_largest_ring, Math.max(x, radius_of_largest_ring));
     y = Math.min(svgH - radius_of_largest_ring, Math.max(y, radius_of_largest_ring));
 
@@ -226,15 +226,15 @@ function createBloom(counter, iParam) {
     //g_circle.max_r * Math.log(21.5)
 
     for (i = numRings - 1; i >= 0; i--) {
-        
-        
+
+
         /* fifth argument in the constructor for g_circle_t (which determines the maximum size of the bloom) as well as the last argument (which determines
             how long it takes the bloom to reach its maximum size) are subject to tweaking; current constants seem to be a good balance
         */
-        
-        
-        
-        circle_array.push(new g_circle_t(counter, 1 - ((Math.floor((numRings - 1 - i) / 3)) + 1) / 3 * 0.5 , (numRings - 1 - i) * 12 + Math.floor((numRings - 1 - i) / 3) * 16 * 0, x, y, init_r, init_r + max_radius * 2 * (2 * (i*0.1)/3 + 1 + ((numRings - 1) / 3)) / numRings, rgbColors[i].r, rgbColors[i].g, rgbColors[i].b, max_radius * 2, 0));
+
+
+
+        circle_array.push(new g_circle_t(counter, 1 - ((Math.floor((numRings - 1 - i) / 3)) + 1) / 3 * 0.5, (numRings - 1 - i) * 12 + Math.floor((numRings - 1 - i) / 3) * 16 * 0, x, y, init_r, init_r + max_radius * 2 * (2 * (i * 0.1) / 3 + 1 + ((numRings - 1) / 3)) / numRings, rgbColors[i].r, rgbColors[i].g, rgbColors[i].b, max_radius * 2, 0));
         /*
         if (i == numRings - 1) {
             circle_array.push(new g_circle_t(counter, 1 - ((Math.floor((numRings - 1 - i) / 3)) + 1) / 3 * 0.5 , (numRings - 1 - i) * 12 + Math.floor((numRings - 1 - i) / 3) * 16, x, y, init_r, init_r + max_radius * (2 * i/3 + 1 + ((numRings - 1) / 3)) / numRings, rgbColors[i].r, rgbColors[i].g, rgbColors[i].b, max_radius * 2, 1));
@@ -242,7 +242,7 @@ function createBloom(counter, iParam) {
             circle_array.push(new g_circle_t(counter, 1 - ((Math.floor((numRings - 1 - i) / 3)) + 1) / 3 * 0.5 , (numRings - 1 - i) * 12 + Math.floor((numRings - 1 - i) / 3) * 16, x, y, init_r, init_r + max_radius * (2 * i/3 + 1 + ((numRings - 1) / 3)) / numRings, rgbColors[i].r, rgbColors[i].g, rgbColors[i].b, max_radius * 2, 0));
         }
         */
-        
+
     }
 
 }
@@ -260,7 +260,7 @@ function sortByHue(hsvColor1, hsvColor2) {
 }
 
 function getImgWidth(number) {
-    switch(number) {
+    switch (number) {
         case 0: return 176;
         case 1: return 252;
         case 2: return 267;
@@ -274,7 +274,7 @@ function getImgWidth(number) {
 }
 
 function getImgHeight(number) {
-    switch(number) {
+    switch (number) {
         case 0: return 256;
         case 1: return 212;
         case 2: return 326;
@@ -303,10 +303,10 @@ function isColorValid(r, g, b) {
 //Utility functions taken mostly from stackoverflow
 
 function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function rgb2hsv () {
+function rgb2hsv() {
     var rr, gg, bb,
         r = arguments[0] / 255,
         g = arguments[1] / 255,
@@ -314,7 +314,7 @@ function rgb2hsv () {
         h, s,
         v = Math.max(r, g, b),
         diff = v - Math.min(r, g, b),
-        diffc = function(c){
+        diffc = function (c) {
             return (v - c) / 6 / diff + 1 / 2;
         };
 
@@ -328,14 +328,14 @@ function rgb2hsv () {
 
         if (r === v) {
             h = bb - gg;
-        }else if (g === v) {
+        } else if (g === v) {
             h = (1 / 3) + rr - bb;
-        }else if (b === v) {
+        } else if (b === v) {
             h = (2 / 3) + gg - rr;
         }
         if (h < 0) {
             h += 1;
-        }else if (h > 1) {
+        } else if (h > 1) {
             h -= 1;
         }
     }
@@ -383,11 +383,11 @@ function HSVtoRGB(h, s, v) {
 
 
 
-function main(){
+function main() {
     // main is called immediately when the function begins
     // Write all initialization functions here //
 
-    window.addEventListener("load", function(){
+    window.addEventListener("load", function () {
         //console.log("starting");
         update();
     });
@@ -398,21 +398,21 @@ function main(){
 // UPDATE LOOP
 //
 
-function update(){
+function update() {
     resize_canvas();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (var i = 0; i < circle_array.length; i++){
+    for (var i = 0; i < circle_array.length; i++) {
         update_circle_state(circle_array[i]);
     }
     //actual_ctx.fillRect(0, 0, actual_canvas.width, actual_canvas.height);
     //actual_ctx.drawImage(canvas, 0, 0);
-    
+
     requestAnimationFrame(update);
 }
 
 
 
-function g_circle_t(counter, opacity, wait, x, y, min_r, max_r, red, green, blue, max_time, invisflag){
+function g_circle_t(counter, opacity, wait, x, y, min_r, max_r, red, green, blue, max_time, invisflag) {
     // Center coordinates of the circle
     this.id = counter;
 
@@ -434,12 +434,12 @@ function g_circle_t(counter, opacity, wait, x, y, min_r, max_r, red, green, blue
     this.max_r = max_r;
     this.r = 300;
     this.min_r = min_r;
-    
-    
+
+
 
 
     // Max radius of the circle before it starts shrinking
-    
+
 
     this.is_fading_away = false;
 
@@ -451,7 +451,7 @@ function g_circle_t(counter, opacity, wait, x, y, min_r, max_r, red, green, blue
     radgrad.addColorStop(0, 'rgba(' + this.red.toString() + ',' + this.green.toString() + ',' + this.blue.toString() + ',1)');
     radgrad.addColorStop(0.8, 'rgba(' + this.red.toString() + ',' + this.green.toString() + ',' + this.blue.toString() + ',1)');
     radgrad.addColorStop(1, 'rgba(' + this.red.toString() + ',' + this.green.toString() + ',' + this.blue.toString() + ',' + '0' + ')');
-    
+
     radgrad = 'rgba(' + this.red.toString() + ',' + this.green.toString() + ',' + this.blue.toString() + ',1)';
 
     this.gradient = radgrad;
@@ -462,12 +462,12 @@ function g_circle_t(counter, opacity, wait, x, y, min_r, max_r, red, green, blue
 }
 
 
-function g_circle_draw(g_circle){
+function g_circle_draw(g_circle) {
 
     ctx.beginPath();
 
-    ctx.arc(g_circle.x, g_circle.y, g_circle.r, 0, 2*Math.PI, false);
-    
+    ctx.arc(g_circle.x, g_circle.y, g_circle.r, 0, 2 * Math.PI, false);
+
     ctx.fillStyle = g_circle.gradient;
     ctx.strokeStyle = g_circle.gradient;
     // ctx.fill();
@@ -475,7 +475,7 @@ function g_circle_draw(g_circle){
     ctx.stroke();
 }
 
-function update_circle_state(g_circle){
+function update_circle_state(g_circle) {
     if (g_circle.wait <= 0) {
         var radgrad = ctx.createRadialGradient(g_circle.x, g_circle.y, 0, g_circle.x, g_circle.y, g_circle.r);
         if (g_circle.is_fading_away) {
@@ -488,7 +488,7 @@ function update_circle_state(g_circle){
                 }
                 return;
             } else {
-                var blur = 1 - ((g_circle.time - g_circle.max_time)/ (1 * g_circle.max_time));
+                var blur = 1 - ((g_circle.time - g_circle.max_time) / (1 * g_circle.max_time));
                 if (blur < 0) {
                     blur = 0;
                 }
@@ -526,7 +526,7 @@ function update_circle_state(g_circle){
             if (g_circle.invisflag == 1) {
                 g_circle.gradient = 'rgba(' + g_circle.red.toString() + ',' + g_circle.green.toString() + ',' + g_circle.blue.toString() + ',' + '0' + ')';
             }
-            
+
         }
         g_circle_draw(g_circle);
         //g_circle.gradient = radgrad;
@@ -544,7 +544,7 @@ function update_circle_state(g_circle){
 //
 
 
-function resize_canvas(){
+function resize_canvas() {
     if (canvas.width != window.innerWidth) {
         canvas.width = window.innerWidth;
     }
